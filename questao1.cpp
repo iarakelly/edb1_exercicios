@@ -58,8 +58,7 @@ int main()
 
     int array[] = {10, 2, 3, 9, 11, 0, 2, 20, 1, 2, 3};
     int tamanho = sizeof(array) / sizeof(int);
-    // como estou considerando que se o array tem 11 elementos o seu tmanho é 10 
-    // o primeiro elemento irá na verdade estar na posição -1, ao invés de 0
+
 
     assert(indice_do_menor(array, tamanho,0) == 5);
     assert(conta_pares(array, tamanho, 0)== 6 );
