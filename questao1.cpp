@@ -5,7 +5,7 @@ using namespace std;
 
 int indice_do_menor(int array[], int tamanho, int indice)
 {
-    if (tamanho == -1)
+    if (tamanho == 0)
     {
         return indice;
     }
@@ -40,17 +40,33 @@ int conta_pares(int array[], int tamanho, int inicio)
         }
     }
 }
+int soma_elementos(int array[], int tamanho, int soma)
+{
+    if (tamanho == 0)
+    {
+        return soma;
+    }
+    else
+    {
+        return soma_elementos(array, tamanho - 1, soma + array[tamanho-1]);
+    }
+
+}
 
 int main()
 {
 
     int array[] = {10, 2, 3, 9, 11, 0, 2, 20, 1, 2, 3};
-    int tamanho = (sizeof(array) / sizeof(int)) -1;
+    int tamanho = sizeof(array) / sizeof(int);
+    // como estou considerando que se o array tem 11 elementos o seu tmanho é 10 
+    // o primeiro elemento irá na verdade estar na posição -1, ao invés de 0
 
     assert(indice_do_menor(array, tamanho,0) == 5);
     assert(conta_pares(array, tamanho, 0)== 6 );
+    assert(soma_elementos(array, tamanho, 0) == 63 );
 
-    cout <<"Passou nos testes" << endl;
+
+    cout << "Passou nos testes" << endl;
 
     return 0;
 
