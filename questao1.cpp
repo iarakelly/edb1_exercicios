@@ -52,6 +52,11 @@ int soma_elementos(int array[], int tamanho, int soma)
     }
 
 }
+int valor_medio(int array[], int tamanho, int soma)
+{
+    int somaV = soma_elementos(array, tamanho, soma);
+    return somaV/tamanho;
+}
 
 int main()
 {
@@ -63,6 +68,7 @@ int main()
     assert(indice_do_menor(array, tamanho,0) == 5);
     assert(conta_pares(array, tamanho, 0)== 6 );
     assert(soma_elementos(array, tamanho, 0) == 63 );
+    assert(valor_medio(array, tamanho, 0) == 5);
 
 
     cout << "Passou nos testes" << endl;
