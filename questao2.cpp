@@ -89,8 +89,8 @@ int main()
 
     assert( maior(2117) == 7);
     assert(contaImpares(2117)== 3);
-    assert (soma(2117) == 11);
-    assert (valorMedio(2117) == 2);
+    assert(soma(2117) == 11);
+    assert(valorMedio(2117) == 2);
 
     cout << "Passou nos testes" << endl;
 
