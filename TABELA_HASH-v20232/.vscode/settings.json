@@ -1,0 +1,9 @@
+{
+    "makefile.launchConfigurations": [
+        {
+            "cwd": "/home/lucyedja/Downloads/iara/TABELA_HASH-v20232/bin",
+            "binaryPath": "/home/lucyedja/Downloads/iara/TABELA_HASH-v20232/bin/test",
+            "binaryArgs": []
+        }
+    ]
+}
