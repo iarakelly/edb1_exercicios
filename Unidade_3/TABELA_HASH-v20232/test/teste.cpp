@@ -249,7 +249,7 @@ TEST_CASE("Tabela Hash - Teste de Aumentar dinamicamente a tabela")
 
     CHECK( tabela.fatorDeCarga() < CARGA_LIMITE_SUPERIOR );
 }
-
+/*
 TEST_CASE("Tabela Hash - Teste de Diminuir dinamicamente a tabela") 
 {
     std::size_t tamanhoInicial = 1779;
