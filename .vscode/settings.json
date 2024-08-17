@@ -1,0 +1,14 @@
+{
+    "makefile.launchConfigurations": [
+        {
+            "cwd": "/home/lucyedja/Downloads/iara/TABELA_HASH-v20232/bin",
+            "binaryPath": "/home/lucyedja/Downloads/iara/TABELA_HASH-v20232/bin/test",
+            "binaryArgs": []
+        },
+        {
+            "cwd": "/home/kelly.lima.121/edb1_exercicios/Unidade_3/TABELA_HASH-v20232/bin",
+            "binaryPath": "/home/kelly.lima.121/edb1_exercicios/Unidade_3/TABELA_HASH-v20232/bin/test",
+            "binaryArgs": []
+        }
+    ]
+}
