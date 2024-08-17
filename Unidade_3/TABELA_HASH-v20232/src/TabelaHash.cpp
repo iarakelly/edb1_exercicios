@@ -54,26 +54,26 @@ TabelaHash::~TabelaHash()
  */
 bool TabelaHash::inserir(const string chave, const string valor)
 {
-    if (this->fatorDeCarga() >= CARGA_LIMITE_SUPERIOR)
+    if (this->fatorDeCarga() > CARGA_LIMITE_SUPERIOR)
     {
         this->aumentar();
     }
-    auto indiceINICIAL = this->hash(chave);
+    auto indiceInicial = this->hash(chave);
     int indiceRemovido = -1;
 
     for (size_t delta = 0; delta < this->getTamanho(); delta++)
     {
-        auto indice = (indiceINICIAL+delta) % this->getTamanho();
-        auto elementoATUAL = this->tabela[indice];
+        auto indice = (indiceInicial + delta) % this->getTamanho();
+        auto atual = this->tabela[indice];
 
-        if (elementoATUAL == nullptr)
+        if (atual == nullptr)
         {
             auto novo = new Par<std::string, std::string>(chave, valor);
             if ( indiceRemovido == -1)
             {
                 this->tabela[indice] = novo;
             }
-            else if(indiceRemovido != -1)
+            else
             {
                 this->tabela[indiceRemovido] = novo;
             }
@@ -81,7 +81,7 @@ bool TabelaHash::inserir(const string chave, const string valor)
             ++ this->quantidade;
             return true;
         }
-        else if (elementoATUAL == REMOVIDO)
+        else if (atual == REMOVIDO)
         {
             if (indiceRemovido == -1)
             {
@@ -92,12 +92,15 @@ bool TabelaHash::inserir(const string chave, const string valor)
                 continue;
             }
         }
-        else if(elementoATUAL != REMOVIDO && elementoATUAL->getChave() == chave)
+        else if(atual != REMOVIDO && atual->getChave() == chave)
         {
-            elementoATUAL->setValor(valor);
+            atual->setValor(valor);
             return true;
         }
-
+        else 
+        {
+            continue;
+        }
     }
     return false;
 }
@@ -109,24 +112,27 @@ std::string TabelaHash::buscar(const string chave)
 {
     auto indiceInicial = this->hash(chave);
 
-    for (size_t delta = 0; delta < this->getTamanho(); ++ delta )
+    for (size_t delta = 0; delta < this->getTamanho(); delta++ )
     {
         auto indice = ( indiceInicial + delta ) % this->getTamanho();
-        auto elementoAtual = this->tabela[indice];
+        auto atual = this->tabela[indice];
 
-        if (elementoAtual == nullptr) 
+        if (atual == nullptr) 
         {
             return "NÃO ACHOU";
         } 
-        else if(elementoAtual == REMOVIDO)
+        else if(atual == REMOVIDO)
         {
             continue;
         }
-        else if (elementoAtual->getChave() == chave)
+        else if (atual->getChave() == chave)
         {
-            return elementoAtual->getValor();
+            return atual->getValor();
         }
-
+        else
+        {
+            continue;
+        }
     }
     return "NÃO ACHOU";
 }
@@ -137,7 +143,7 @@ std::string TabelaHash::buscar(const string chave)
  */
 bool TabelaHash::remover(const string chave)
 {
-    if (this->fatorDeCarga() <= CARGA_LIMITE_INFERIOR)
+    if (this->fatorDeCarga() < CARGA_LIMITE_INFERIOR)
     {
         this->diminuir();
     }
@@ -147,25 +153,28 @@ bool TabelaHash::remover(const string chave)
     for (size_t delta = 0; delta < this->getTamanho(); delta++)
     {
         auto indice = ( indiceInicial + delta ) % this->getTamanho();
-        auto elementoAtual = this->tabela[indice];
+        auto atual = this->tabela[indice];
 
-        if(elementoAtual == nullptr )
+        if(atual == nullptr )
         {
             return false;
         }
-        else if(elementoAtual == REMOVIDO)
+        else if(atual == REMOVIDO)
         {
             continue;
         }
-        else if (elementoAtual->getChave() == chave)
+        else if (atual->getChave() == chave)
         {
             delete this->tabela[indice];
             this->tabela[indice] = REMOVIDO;
-            quantidade--;
+            --this->quantidade;
             return true;
         }
+        else
+        {
+            continue;
+        }
     } 
-    return false;
 }
 
 float TabelaHash::fatorDeCarga()
@@ -188,39 +197,39 @@ void TabelaHash::diminuir()
 
 void TabelaHash::redimensionar(std::size_t tamanhoNovo)
 {
-    auto tamanhoVelho = this->getTamanho();
+    auto TamanhoVelho = this->getTamanho();
     this->tamanho = tamanhoNovo;
 
-    auto arrayNovo = new Par<std::string, std::string>*[tamanhoNovo];
+    auto NovoArray = new Par<std::string , std::string>* [tamanhoNovo];
 
-    for( std::size_t i = 0; i < tamanhoNovo; i++ )
+    for(size_t i = 0; i < tamanhoNovo; i++)
     {
-        arrayNovo[i] = nullptr;
+        NovoArray[i] = nullptr;
     }
 
-    for (auto i = 0; i < tamanhoVelho; i ++)
+    for (auto i = 0; i < TamanhoVelho; i++)
     {
         auto atual = this->tabela[i];
 
-        if(atual != nullptr && atual != REMOVIDO)
+        if(atual != REMOVIDO && atual != nullptr)
         {
             auto chave = atual->getChave();
             auto indiceInicial = this->hash(chave);
 
-            for (auto j = 0; j < tamanhoNovo; j ++)
+            for (auto delta = 0; delta < tamanhoNovo; delta++ )
             {
-                auto indice = (indiceInicial + j ) % tamanhoNovo;
-
-                if (arrayNovo[indice] == nullptr)
+                auto indice = (indiceInicial + delta) % tamanhoNovo;
+                
+                if(NovoArray[indice] == nullptr)
                 {
-                   arrayNovo[indice] == atual;
-                   break;
+                    NovoArray[indice] == atual;
+                    break;
                 }
             }
         }
     }
     delete[] this->tabela;
-    this->tabela = arrayNovo;    
+    this->tabela = NovoArray;
 }
 
 std::size_t TabelaHash::preHash(const string chave)
