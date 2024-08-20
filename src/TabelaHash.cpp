@@ -92,7 +92,7 @@ bool TabelaHash::inserir(const string chave, const string valor)
                 continue;
             }
         }
-        else if(atual != REMOVIDO && atual->getChave() == chave)
+        else if(atual->getChave() == chave)
         {
             atual->setValor(valor);
             return true;
@@ -174,7 +174,8 @@ bool TabelaHash::remover(const string chave)
         {
             continue;
         }
-    } 
+    }
+    return false; 
 }
 
 float TabelaHash::fatorDeCarga()
@@ -197,21 +198,59 @@ void TabelaHash::diminuir()
 
 void TabelaHash::redimensionar(std::size_t tamanhoNovo)
 {
-    auto TamanhoVelho = this->getTamanho();
+    //-----------------------ESSE CÓDIGO FUNCIONA-----------------------
+    auto tamanhoVelho = this->getTamanho();
     this->tamanho = tamanhoNovo;
 
-    auto NovoArray = new Par<std::string , std::string>* [tamanhoNovo];
+    auto novoArray = new Par<std::string,std::string>*[tamanhoNovo];
+     
+     for(size_t i = 0; i < tamanhoNovo; i++)
+     {
+        novoArray[i] = nullptr;
+     }
+
+     for (size_t i = 0; i < tamanhoVelho; i++)
+     {
+        auto atual = this->tabela[i];
+
+        if(atual !=nullptr && atual != REMOVIDO)
+        {
+            auto chave = atual->getChave();
+            auto IndiceInicial = this->hash(chave);
+
+            for(auto delta = 0; delta < tamanhoNovo; delta ++)
+            {
+                auto indice = (IndiceInicial + delta) % tamanhoNovo;
+
+                if(novoArray[indice] == nullptr)
+                {
+                    novoArray[indice] = atual;
+                    break;
+                }
+            }
+        }
+     }
+     delete [] this->tabela;
+     this->tabela = novoArray;
+    //-----------------------ESSE CÓDIGO FUNCIONA-----------------------
+
+    //-----------------------MAS ESSE NÃO FUNCIONA-----------------------
+    /*
+    auto tamanhoVelho = this->getTamanho();
+    this->tamanho = tamanhoNovo;
+
+    auto novoArray = new Par<std::string,std::string>*[tamanhoNovo];
 
     for(size_t i = 0; i < tamanhoNovo; i++)
     {
-        NovoArray[i] = nullptr;
+        novoArray[i] = nullptr;
     }
 
-    for (auto i = 0; i < TamanhoVelho; i++)
+    for (size_t i = 0; i < tamanhoVelho; i++)
     {
         auto atual = this->tabela[i];
 
-        if(atual != REMOVIDO && atual != nullptr)
+        if(atual != nullptr && atual != REMOVIDO)
         {
             auto chave = atual->getChave();
             auto indiceInicial = this->hash(chave);
@@ -220,16 +259,19 @@ void TabelaHash::redimensionar(std::size_t tamanhoNovo)
             {
                 auto indice = (indiceInicial + delta) % tamanhoNovo;
                 
-                if(NovoArray[indice] == nullptr)
+                if(novoArray[indice] == nullptr)
                 {
-                    NovoArray[indice] == atual;
+                    novoArray[indice] == atual;
                     break;
                 }
             }
         }
     }
-    delete[] this->tabela;
-    this->tabela = NovoArray;
+    delete [] this->tabela;
+    this->tabela = novoArray;
+    */
+    //-----------------------MAS ESSE NÃO FUNCIONA-----------------------
+
 }
 
 std::size_t TabelaHash::preHash(const string chave)
